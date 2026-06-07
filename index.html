@@ -493,7 +493,7 @@
     }
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const name    = document.getElementById('name').value.trim();
     const email   = document.getElementById('email').value.trim();
     const message = document.getElementById('message').value.trim();
@@ -501,7 +501,23 @@
       alert('Please fill in all fields.');
       return;
     }
-    alert('Thanks ' + name + '! Form backend coming in a later step.');
+    try {
+      const response = await fetch('https://06twu9fdel.execute-api.eu-north-1.amazonaws.com/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message })
+      });
+      if (response.ok) {
+        alert('Message sent! I\'ll be in touch soon.');
+        document.getElementById('name').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('message').value = '';
+      } else {
+        alert('Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      alert('Something went wrong. Please try again.');
+    }
   }
 
   getVisitorCount();
