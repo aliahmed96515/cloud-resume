@@ -5,6 +5,16 @@ Description: Cloud Resume Challenge - Ali Ahmed
 Globals:
   Function:
     Timeout: 3
+  HttpApi:
+    CorsConfiguration:
+      AllowOrigins:
+        - "*"
+      AllowHeaders:
+        - "Content-Type"
+      AllowMethods:
+        - "GET"
+        - "POST"
+        - "OPTIONS"
 
 Resources:
   VisitorCountFunction:
