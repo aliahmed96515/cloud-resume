@@ -37,6 +37,33 @@ Resources:
         - AttributeName: id
           KeyType: HASH
 
+  ContactFormFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: contact_form/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+                - ses:SendRawEmail
+              Resource: '*'
+      Events:
+        ContactForm:
+          Type: HttpApi
+          Properties:
+            Path: /contact
+            Method: post
+        ContactFormOptions:
+          Type: HttpApi
+          Properties:
+            Path: /contact
+            Method: options
+
 Outputs:
   VisitorCountApi:
     Description: "API Gateway endpoint URL"
@@ -44,3 +71,6 @@ Outputs:
   VisitorCountFunction:
     Description: "Visitor Counter Lambda Function ARN"
     Value: !GetAtt VisitorCountFunction.Arn
+  ContactFormApi:
+    Description: "Contact form API endpoint"
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/contact"
