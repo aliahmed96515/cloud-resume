@@ -3,7 +3,21 @@ import boto3
 
 ses = boto3.client('ses', region_name='eu-north-1')
 
+CORS_HEADERS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST,OPTIONS'
+}
+
 def lambda_handler(event, context):
+    # Handle CORS preflight
+    if event.get('requestContext', {}).get('http', {}).get('method') == 'OPTIONS':
+        return {
+            'statusCode': 200,
+            'headers': CORS_HEADERS,
+            'body': ''
+        }
+
     try:
         body = json.loads(event['body'])
         name = body['name']
@@ -29,19 +43,13 @@ def lambda_handler(event, context):
 
         return {
             'statusCode': 200,
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Methods': 'POST,OPTIONS'
-            },
+            'headers': CORS_HEADERS,
             'body': json.dumps({'message': 'Email sent successfully'})
         }
 
     except Exception as e:
         return {
             'statusCode': 500,
-            'headers': {
-                'Access-Control-Allow-Origin': '*'
-            },
+            'headers': CORS_HEADERS,
             'body': json.dumps({'error': str(e)})
         }
