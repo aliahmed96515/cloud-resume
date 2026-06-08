@@ -22,6 +22,10 @@ jobs:
 
       - name: Run tests
         run: pytest tests/test_lambda.py -v
+        env:
+          AWS_DEFAULT_REGION: eu-north-1
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
 
       - name: Setup AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
